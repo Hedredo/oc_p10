@@ -1,4 +1,4 @@
-[ ] Doc mentor : https://docs.google.com/document/d/10dwMBYIQ-p33lMKC1kKqp6a2n9bAV4XudkUD2G6GoEQ/edit?invite=CLLTl7kI&tab=t.0
+- [ ] Doc mentor : https://docs.google.com/document/d/10dwMBYIQ-p33lMKC1kKqp6a2n9bAV4XudkUD2G6GoEQ/edit?invite=CLLTl7kI&tab=t.0
  - [ ] Vidéo de présentation : https://youtu.be/MUGHx-2K8K0
  - [ ] Introduction à la recommandation : https://realpython.com/build-recommendation-engine-collaborative-filtering/
  - [ ] Tuto Implicit : https://towardsdatascience.com/building-a-collaborative-filtering-recommender-system-with-clickstream-data-dffc86c8c65
@@ -6,3 +6,6 @@
  - [ ] Tuto Surprise : https://surprise.readthedocs.io/en/stable/getting_started.html
  - [ ] Tuto Scikit-learn : https://scikit-learn.org/stable/modules/collaborative_filtering.html
  - [ ] Tuto implicit 2 : https://medium.com/radon-dev/als-implicit-collaborative-filtering-5ed653ba39fe
+- [ ]Données
+ - [ ] Introduction reco kaggle : https://www.kaggle.com/code/devmaxime/intro-to-recommendation-systems
+ - [ ] Data kaggle : https://www.kaggle.com/datasets/gspmoreira/news-portal-user-interactions-by-globocom#clicks_sample.csv
