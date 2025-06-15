@@ -33,10 +33,10 @@ Les particularités : connecter l'application mobile avec l'API qui sera implém
 - [Tuto Implicit #2](#)
 
 ## 1. Nettoyage des données
-- [ ] a. Fusionner les fichiers de clicks dans un seul dataframe
-- [ ] b. Fusionner les dataframes clicks et metadata
-- [ ] c. Supprimer les utilisateurs ayant lu moins de N articles
-- [ ] d. Supprimer les articles ayant été lus moins de N fois
+- [X] a. Fusionner les fichiers de clicks dans un seul dataframe
+- [X] b. Fusionner les dataframes clicks et metadata
+- [X] c. Supprimer les utilisateurs ayant lu moins de N articles
+- [X] d. Supprimer les articles ayant été lus moins de N fois
 
 ## 2. Préparation des données
 - [ ] a. Diviser la base de données en deux en fixant un point temporel qui séparera d'un côté le train (l'historique des articles consulté) et le test (les articles que l'on devrait recommander si la méthode était parfaite)
