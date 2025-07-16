@@ -42,9 +42,16 @@ Voici une synthèse en Markdown sur la méthodologie des deux notebooks, couvran
 
 ## 3. Métriques d’évaluation
 
+### 3.1. **GPT recommendation metrics**
 - **Recall@N** : Taux de présence des articles réellement consultés dans le top-N des recommandations (N=5, 10).
 - **RMSE** : Pour la prédiction de notes (utilisé avec Surprise).
 - **Comparaison des modèles** : Les performances sont comparées à la baseline (popularity) et entre elles via des graphiques.
+
+### 3.2. **Introduction des métriques**
+
+Recommandations & rankings systems ont un objectif en commun : retourner une liste d'articles triés par pertinence pour un utilisateur donné.
+
+
 
 ---
 
