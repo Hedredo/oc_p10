@@ -1,0 +1,8 @@
+.git*
+.vscode
+__pycache__
+tests
+.env
+notebooks/
+*.pyc
+.pytest_cache
