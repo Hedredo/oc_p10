@@ -1,8 +1,7 @@
 .git*
 .vscode
-__pycache__
-tests
-.env
-notebooks/
-*.pyc
-.pytest_cache
+__azurite_db*__.json
+__blobstorage__
+__queuestorage__
+local.settings.json
+test
