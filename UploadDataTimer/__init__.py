@@ -12,10 +12,10 @@ from sklearn.decomposition import PCA
 import pickle
 
 # Paramètres à personnaliser
-ZIP_URL = "https://ton-url-source/ton-fichier.zip"
+ZIP_URL = "https://s3-eu-west-1.amazonaws.com/static.oc-static.com/prod/courses/files/AI+Engineer/Project+9+-+R%C3%A9alisez+une+application+mobile+de+recommandation+de+contenu/news-portal-user-interactions-by-globocom.zip"
 CONTAINER_NAME = "nom-du-conteneur"
-CSV_FILENAME = "ton_fichier.csv"         # Nom du CSV à extraire du ZIP
-PARQUET_FILENAME = "ton_fichier.parquet" # Nom du fichier Parquet à uploader
+CSV_FILENAME = "clicksdata.csv"         # Nom du CSV à extraire du ZIP
+PARQUET_FILENAME = "clicksdata.parquet" # Nom du fichier Parquet à uploader
 EMBEDDINGS_FILENAME = "articles_embeddings.pickle"  # Nom du pickle à uploader
 EMBEDDINGS_BLOB_NAME = "articles_embeddings_compressed.pickle"  # Nom sur le blob
 N_COMPONENTS_PCA = 100  # À ajuster selon ton besoin
