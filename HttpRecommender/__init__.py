@@ -1,4 +1,4 @@
-import io
+import os
 import json
 import pickle
 from datetime import datetime
@@ -9,15 +9,15 @@ import azure.functions as func
 from .recommender import PopularityRecommender, WeightedContentBasedRecommender
 
 # Connect to blob storage
-blob_service_client = BlobServiceClient.from_connection_string("<ta_chaine_de_connexion>")
-container_client = blob_service_client.get_container_client("<nom_du_conteneur>")
+blob_service_client = BlobServiceClient.from_connection_string(os.environ["AzureWebJobsStorage"])
+container_client = blob_service_client.get_container_client(os.environ["CONTAINER_NAME"])
 
 # Load Pickle data and Embeddings from the blob
-blob_client = container_client.get_blob_client("merged_data.pickle")
+blob_client = container_client.get_blob_client(os.environ["PICKLE_BLOB_NAME"])
 pickle_bytes = blob_client.download_blob().readall()
 clicks_df = pickle.loads(pickle_bytes)
 
-blob_client = container_client.get_blob_client("articles_embeddings_pca.pickle")
+blob_client = container_client.get_blob_client(os.environ["EMBEDDINGS_BLOB_NAME"])
 pickle_bytes = blob_client.download_blob().readall()
 embeddings = pickle.loads(pickle_bytes)
 

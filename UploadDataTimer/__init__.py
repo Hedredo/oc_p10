@@ -18,25 +18,25 @@ from azure.storage.blob import BlobServiceClient
 import azure.functions as func
 
 
-# Paramètres à personnaliser
-ZIP_URL = "https://s3-eu-west-1.amazonaws.com/static.oc-static.com/prod/courses/files/AI+Engineer/Project+9+-+R%C3%A9alisez+une+application+mobile+de+recommandation+de+contenu/news-portal-user-interactions-by-globocom.zip"
-CONTAINER_NAME = "nom-du-conteneur"
-PICKLE_FILENAME = "merged_data.pickle"         # Nom du CSV à extraire du ZIP
-PCA_N_COMPONENTS = .95  # Variance percentage to keep for PCA
-THRESHOLD_DATES = 1000  # Minimum clicks per day to keep the date
-EMBEDDINGS_BLOB_NAME = "articles_embeddings_pca.pickle"  # Name
-PICKLE_BLOB_NAME = "merged_data.pickle"         # Nom du CSV à extraire du ZIP
+# Customizable parameters
+ZIP_URL = os.environ["ZIP_URL"]  # URL of the ZIP file to download
+BLOB_CONNECTION_STRING = os.environ["AzureWebJobsStorage"]  # Connection string
+CONTAINER_NAME = os.environ["CONTAINER_NAME"]
+PCA_N_COMPONENTS = float(os.environ["PCA_N_COMPONENTS"])  # Variance percentage to keep for PCA
+THRESHOLD_DT = int(os.environ["THRESHOLD_DT"])  # Minimum clicks per day to keep the date
+EMBEDDINGS_BLOB_NAME = os.environ["EMBEDDINGS_BLOB_NAME"]  # Name
+PICKLE_BLOB_NAME = os.environ["PICKLE_BLOB_NAME"]         # Name of the CSV to extract from the ZIP
 
 def ensure_container_exists(blob_service_client: BlobServiceClient, container_name: str) -> None:
     """Ensure the Azure Blob Storage container exists."""
     try:
         container_client = blob_service_client.get_container_client(container_name)
         container_client.get_container_properties()
-        logging.info(f"✅ Le conteneur '{container_name}' existe déjà.")
+        logging.info(f"Container '{container_name}' already exists.")
     except Exception:
-        logging.info(f"🔹 Le conteneur '{container_name}' n'existe pas, création en cours...")
+        logging.info(f"🔹 Container '{container_name}' does not exist, creating...")
         blob_service_client.create_container(container_name)
-        logging.info(f"✅ Conteneur '{container_name}' créé avec succès.")
+        logging.info(f"✅ Container '{container_name}' created successfully.")
 
 @retry(
     stop=stop_after_attempt(5),
@@ -73,7 +73,7 @@ def compress_embeddings(extract_to: str, n_components: float|int,
     # Ensure the directory exists
     os.makedirs(extract_to, exist_ok=True)
     # Load the embeddings
-    embeddings = pd.read_pickle(os.path.join(extract_to, embeddings_filename))
+    embeddings = pd.read_pickle(os.path.join(extract_to, "articles_embeddings.pickle"))
     if getattr(embeddings, "size", 0) == 0:
         logging.error("No embeddings found to compress.")
         return
@@ -246,15 +246,15 @@ def upload_to_blob(blob_service_client, container_name, file_path, blob_name):
         blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
         with open(file_path, "rb") as data:
             blob_client.upload_blob(data, overwrite=True)
-        logging.info("✅ Upload terminé !")
+        logging.info("Upload ended with success.")
     except Exception as e:
-        logging.error(f"❌ Erreur lors de l'upload sur Azure Blob Storage : {e}")
+        logging.error(f"Error uploading to Azure Blob Storage: {e}")
         raise
 
 def main(mytimer: func.TimerRequest) -> None:
     """Main function to run the ETL pipeline and upload data to Azure Blob Storage."""
     logging.basicConfig(level=logging.INFO)
-    logging.info("=== Début de la tâche planifiée UploadDataTimer ===")
+    logging.info("=== Starting planified task UploadDataTimer ===")
     try:
         # Récupérer la chaîne de connexion depuis les variables d'environnement Azure
         BLOB_CONNECTION_STRING = os.environ["AzureWebJobsStorage"]
@@ -266,11 +266,10 @@ def main(mytimer: func.TimerRequest) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             download_and_extract_zip(ZIP_URL, tmpdir)
             compress_embeddings(tmpdir, n_components=PCA_N_COMPONENTS, embeddings_filename=EMBEDDINGS_BLOB_NAME)
-            etl_pipeline_clicks_articles(tmpdir, threshold=THRESHOLD_DATES, merged_file=PICKLE_BLOB_NAME)
-
-            upload_to_blob(blob_service_client, CONTAINER_NAME, os.path.join(tmpdir, PICKLE_BLOB_NAME), PICKLE_BLOB_NAME)
             upload_to_blob(blob_service_client, CONTAINER_NAME, os.path.join(tmpdir, EMBEDDINGS_BLOB_NAME), EMBEDDINGS_BLOB_NAME)
+            etl_pipeline_clicks_articles(tmpdir, threshold=THRESHOLD_DT, merged_file=PICKLE_BLOB_NAME)
+            upload_to_blob(blob_service_client, CONTAINER_NAME, os.path.join(tmpdir, PICKLE_BLOB_NAME), PICKLE_BLOB_NAME)
 
-        logging.info("=== Tâche UploadDataTimer terminée avec succès ===")
+        logging.info("=== Task UploadDataTimer ended with success ===")
     except Exception as e:
-        logging.error(f"❌ Erreur dans la fonction UploadDataTimer : {e}")
+        logging.error(f"Error in UploadDataTimer function: {e}")
