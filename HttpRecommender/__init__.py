@@ -1,7 +1,7 @@
 import os
 import json
 import pickle
-from datetime import datetime
+from pandas import to_datetime
 
 from azure.storage.blob import BlobServiceClient
 import azure.functions as func
@@ -23,7 +23,7 @@ embeddings = pickle.loads(pickle_bytes)
 
 # Load max date to use as split date for recency weighting
 SPLIT_DATE = clicks_df["click_timestamp"].max()
-SPLIT_DATE = datetime.strptime(SPLIT_DATE, '%Y-%m-%d')
+SPLIT_DATE = to_datetime(clicks_df["click_timestamp"].max()).to_pydatetime()
 
 # Main Azure HTTP Trigger function
 def main(req: func.HttpRequest) -> func.HttpResponse:
