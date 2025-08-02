@@ -11,3 +11,7 @@ wheels/
 
 # Data folder
 data/
+
+
+# Azure artifacts
+local.settings.json
