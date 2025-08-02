@@ -1,4 +1,4 @@
-name: Deploy Azure Functions
+name: Deploy Azure Function (Flexible Plan – Oryx build)
 
 on:
   push:
@@ -10,26 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Archive function app code
-        run: |
-          zip -r functionapp.zip . -x '*.git*' '*.venv*'
-
-      - name: Deploy to Azure Functions
-        uses: azure/webapps-deploy@v2
+      - name: Deploy to Azure Functions (with Oryx remote build)
+        uses: Azure/functions-action@v1
         with:
           app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-          package: functionapp.zip
+          package: '.'                   # déploiement du dossier source
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true         # utilisation de Oryx pour le build
