@@ -7,3 +7,5 @@ local.settings.json
 data/
 notebooks/
 .venv/
+LICENCE
+README.md
