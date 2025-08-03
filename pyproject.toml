@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "gradio>=5.39.0",
     "h5py>=3.14.0",
     "implicit>=0.7.2",
     "pandas>=2.2.3",

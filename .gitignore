@@ -11,7 +11,11 @@ wheels/
 
 # Data folder
 data/
-
+HttpRecommender/
+UploadDataTimer/
 
 # Azure artifacts
-local.settings.json
+local.settings.
+
+# Environment variables
+.env
