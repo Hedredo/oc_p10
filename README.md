@@ -7,6 +7,11 @@ Deux Azure Functions principales sont utilisées :
 - **UploadDataTimer** : Fonction planifiée (Timer Trigger) qui télécharge, traite et met à jour les données (embeddings, clics, articles) sur Azure Blob Storage à intervalle régulier.
 - **HttpRecommender** : Fonction HTTP Trigger qui expose une API permettant d'obtenir des recommandations d'articles pour un utilisateur donné.
 
+## Branches du repo
+1. **main** : Contient les notebooks d'analyse exploratoire des données, la phase de modélisation et d'évaluation et aussi le front Gradio.
+2. **dev** : Contient le dev des 2 azure functions.
+3. **prod** : Contient la version fonctionnelle utilisée à date.
+
 ## Fonctionnement général
 1. **UploadDataTimer**
    - Télécharge un ZIP de données depuis une URL.
@@ -17,7 +22,7 @@ Deux Azure Functions principales sont utilisées :
 
 2. **HttpRecommender**
    - Récupère les fichiers de données et d'embeddings depuis Azure Blob Storage.
-   - Expose une API HTTP pour obtenir des recommandations personnalisées.
+   - Expose une API HTTP pour obtenir des recommandations personnalisées de 5 articles non lus par un utilisateur donné (user_id).
    - Si l'utilisateur n'existe pas, propose les articles les plus populaires (cold start).
    - Sinon, utilise un algorithme de recommandation basé sur le contenu et les préférences utilisateur.
 
@@ -34,12 +39,13 @@ curl "http://localhost:7071/api/HttpRecommender?user_id=123"
 
 ### En production (exemple)
 ```bash
-curl "https://<votre-app-name>.azurewebsites.net/api/HttpRecommender?user_id=123"
+curl "https://<votre-app-name>.azurewebsites.net/api/HttpRecommender?user_id=123&code=xxxxxx"
 ```
 
 - **Paramètres** :
   - `user_id` : identifiant de l'utilisateur pour lequel on souhaite obtenir des recommandations
   - `k` (optionnel) : nombre de recommandations à retourner (par défaut 5)
+  - `code`: contient le code de sécurité pour appeller l'API pour éviter les requêtes indésirables
 
 ### Réponse attendue
 ```json
